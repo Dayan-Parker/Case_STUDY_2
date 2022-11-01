@@ -21,10 +21,10 @@ A = [];
 B = zeros(4,1);
 
 % Set up the vector of initial conditions
-x0 = [];
+x0 = [STLmetroPop*100000 1 0 0];
 
 % simulate the SIRD model for t time-steps
-sys_sir_base = ss(A,B,eye(4),zeros(4,1),1)
+sys_sir_base = ss(A,B,eye(4),zeros(4,1),1);
 y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 
 % return a "cost".  This is the quantitity that you want your model to
