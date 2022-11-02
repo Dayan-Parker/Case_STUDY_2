@@ -1,5 +1,6 @@
+close all,clc,clear
 load COVIDdata.mat
-coviddata = [COVID_STLmetro.cases,COVID_STLmetro.deaths,STLmetroPop] ; % TO SPECIFY
+coviddata = [COVID_STLmetro.cases,COVID_STLmetro.deaths]; % TO SPECIFY
 t = length(COVID_STLmetro.date); % TO SPECIFY
 
 % The following line creates an 'anonymous' function that will return the cost (i.e., the model fitting error) given a set
@@ -35,12 +36,12 @@ ub = []';
 lb = []';
 
 % Specify some initial parameters for the optimizer to start from
-x0 = [STLmetroPop,0,0,0]; 
+x0 = [0.05,0.02,0.3,1,0,0,0]; 
 
 % This is the key line that tries to opimize your model parameters in order to
 % fit the data
 % note tath you 
-[x,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+x = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
 
 %plot(Y);
 %legend('S','I','R','D');
