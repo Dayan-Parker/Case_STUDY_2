@@ -1,6 +1,5 @@
 %% This function takes three inputs
-x = [0.05,0.02,0.3,1,0,0,0];
-t = 798;
+
 function f = siroutput_fullfun(x,t)
 
 % Here is a suggested framework for x.  However, you are free to deviate

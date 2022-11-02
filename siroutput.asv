@@ -8,19 +8,28 @@ data = [COVID_STLmetro.cases,COVID_STLmetro.deaths];
 
 %becase the siroutput_full function does the same thing as this function I
 %justed called siroutput_full to make the code more readable.
-%prediction = siroutput_full(x,t);
+x = [0.05,0.02,0.3,1,0,0,0];
+t = 798;
+prediction = siroutput_full(x,t);
+
+population = zeros(798,1);
+population(1:798,:) = STLmetroPop*100000;
+
+predict_cases = prediction(:,2) + prediction(:,3);
+predict_death = prediction(:,4);
+
+predict_cases = prediction(:,2) + prediction(:,3);
+predict_death = prediction(:,4);
 
 %% Orginze the data to be comparable to the prediction.
 
 %as of yet there are not reinfection caluclated.
 
 %creata a population vector which changes based on covid related deaths 
-population = zeros(798,1);
-population(1:798,:) = STLmetroPop*100000;
+
 for i = 1:798
     population(i,:)=population(i,:)-data(i,2);
 end
-
 
 %the recovered is given by the diffrence in the new population and the
 %numer of new COVID cases.
@@ -28,7 +37,7 @@ recovered  = zeros(798,1);
 %the first entry will be zero be there has not been enough time for anyone
 %to recover.
 for i = 2:798
-    recovered(i,:)=(population(i,:)-(population(i-1,:)-data(i,1)))/STLmetroPop*100000;
+    recovered(i,:)=(population(i,:)-(population(i-1,:)-(data(i,1)-data(i-1,1))))/(STLmetroPop*100000);
 end
 
 susceptible = zeros(798,1);
@@ -41,17 +50,18 @@ end
 
 %create a infected variable by dividing the number of cases by the total
 %population to create a precentage based infected vector.
-infected = zeros(998,1);
+infected = zeros(798,1);
 for i = 1:798
     infected(i,:) = data(i,1)/(STLmetroPop*100000);
 end
 
-deaths = zeros(998,1);
+%create a "dead" vector using the same method as above
+dead = zeros(798,1);
 for i = 1:798
-    deaths(i,:) = data(i,2)/(STLmetroPop*100000);
+    dead(i,:) = data(i,2)/(STLmetroPop*100000);
 end
 
-data_SIRD = [susceptible,infected,recovered,data(:,2)];
+data_SIRD = [susceptible,infected,recovered,dead];
 %% return statment
 % return a "cost".  This is the quantitity that you want your model to
 % minimize.  Basically, this should encapsulate the difference between your
