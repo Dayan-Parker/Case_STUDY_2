@@ -22,7 +22,6 @@ for i = 1:798
     population(i,:)=population(i,:)-data(i,2);
 end
 
-
 %the recovered is given by the diffrence in the new population and the
 %numer of new COVID cases.
 recovered  = zeros(798,1);
