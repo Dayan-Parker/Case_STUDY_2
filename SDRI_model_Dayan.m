@@ -10,11 +10,11 @@ A = [0.95 0.04 0 0; 0.05 0.85 0 0; 0 0.1 1 0; 0 0.01 0 1];
 
 %create a vector which holds the proportions of SIRD at state t
 X = [1 0 0 0];
-t = 100;
+t = 1000;
 Simulation = zeros(4,t);
 Simulation(:,1) = X;
 
-for i = 1:99
+for i = 1:t-1
     Simulation(:,i+1) = A*Simulation(:,i);
 end
 
@@ -35,7 +35,7 @@ ReSimulation = zeros(4,t);
 ReSimulation(:,1) = X;
 
 %create a vector which holds the proportions of SIRD at state t
-for i = 1:99
+for i = 1:t-1
     ReSimulation(:,i+1) = A_reinfect*ReSimulation(:,i);
 end
 

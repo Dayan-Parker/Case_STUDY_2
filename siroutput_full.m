@@ -1,8 +1,7 @@
 %% This function takes three inputs
-% x - a set of parameters
-% t - the number of time-steps you wish to simulate
-
-function f = siroutput_full(x,t)
+x = [0.05,0.02,0.3,1,0,0,0];
+t = 798;
+function f = siroutput_fullfun(x,t)
 
 % Here is a suggested framework for x.  However, you are free to deviate
 % from this if you wish.
@@ -37,5 +36,4 @@ y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 
 % return the output of the simulation
 f = y;
-
 end
