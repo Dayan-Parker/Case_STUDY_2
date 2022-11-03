@@ -24,16 +24,16 @@ b = [];
 % Hint: For example, the sum of the initial conditions should be
 % constrained
 % If you don't want such a constraint, keep these matrices empty.
-Af = [];
-bf = [];
+Af = ones(1,7);
+bf = 2;
 
 %% set up upper and lower bound constraints
 % Set upper and lower bounds on the parameters
 % lb < x < ub
 % here, the inequality is imposed element-wise
 % If you don't want such a constraint, keep these matrices empty.
-ub = []';
-lb = []';
+ub = ones(1,7);
+lb = zeros(1,7);
 
 % Specify some initial parameters for the optimizer to start from
 x0 = [0.05,0.02,0.3,1,0,0,0]; 
@@ -41,15 +41,16 @@ x0 = [0.05,0.02,0.3,1,0,0,0];
 % This is the key line that tries to opimize your model parameters in order to
 % fit the data
 % note tath you 
-x = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
-
-%plot(Y);
-%legend('S','I','R','D');
-%xlabel('Time')
-
-Y_fit = siroutput_full(x,t);
+[x,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp(x)
+disp(fval)
 
 figure(1);
+Y_fit = siroutput_full(x,t);
+plot(Y_fit);
+legend('S','I','R','D');
+xlabel('Time')
+
 
 % Make some plots that illustrate your findings.
 % TO ADD
