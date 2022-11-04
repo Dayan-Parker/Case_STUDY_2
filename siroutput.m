@@ -18,20 +18,30 @@ prediction = siroutput_full(x,t);
 
 %as of yet there are not reinfection caluclated.
 
-%create a infected variable by dividing the number of cases by the total
-%population to create a precentage based infected vector.
-infected = zeros(t,1);
-for i = 1:t
-    infected(i,:) = data(i,1)/(STLmetroPop*100000);
-end
+population = STLmetroPop*100000;
+% normalizer = 0.001;
 
-%create a "dead" vector using the same method as above
-dead = zeros(t,1);
-for i = 1:t
-    dead(i,:) = data(i,2)/(STLmetroPop*100000);
-end
+predict_cases = prediction(:,2) + prediction(:,3);
+predict_death = prediction(:,4);
 
-data_compare = [infected,dead];
+predict_cases = population * predict_cases;
+predict_death = population * predict_death;
+actual_cases = data(:,1);
+actual_death = data(:,2);
+
+case_weight = 1;
+death_weight = 1;
+
+case_diff = predict_cases - actual_cases;
+death_diff = predict_death - actual_death;
+
+case_sqr = case_diff.^2;
+death_sqr = death_diff.^2;
+
+case_error = sum(case_sqr);
+death_error = sum(death_sqr);
+
+
 %% return statment
 % return a "cost".  This is the quantitity that you want your model to
 % minimize.  Basically, this should encapsulate the difference between your
@@ -39,10 +49,8 @@ data_compare = [infected,dead];
 % Hint: This is a central part of this case study!  choices here will have
 % a big impact!
 
-predict_infect = prediction(:,2)+prediction(:,3);
-predict_deaths = prediction(:,4);
 %%
 
-f = sum(sum([predict_infect,predict_deaths]-data_compare));
+f = case_error * case_weight + death_error * death_weight;
 
 end
