@@ -46,9 +46,11 @@ disp(fval)
 figure(1);
 Y_fit = siroutput_full(x,t);
 Y_fit = 2747143 * Y_fit;
+Y_cumulative = zeros(798,1);
+for i = 1:798
+    Y_cumulative(i,1)=(Y_fit(i,2)+Y_fit(i,3)+Y_fit(i,4));
+end
+Y_fit = [Y_fit, Y_cumulative, coviddata];
 plot(Y_fit);
-legend('S','I','R','D');
+legend('model_S','model_I','model_R','model_D','model_cumulative_cases', 'measure_cases', 'measure_deaths');
 xlabel('Time')
-
-figure(2);
-plot(coviddata);
