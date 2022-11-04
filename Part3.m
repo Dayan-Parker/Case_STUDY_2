@@ -50,11 +50,20 @@ title('vaccined model')
 
 % compare the model with the given mock data
 Y_fit= [Y_fit, mockdata];
-Y_compare = [4 6 7 8];
+Y_compare = [6 4 7 8];
 Y_compare = Y_fit(:, Y_compare);
 figure();
 plot(Y_compare);
 xlabel('Time')
-legend('model_D', 'model_N','measured N','measured D')
+legend('model_N', 'model_D','mock N','mock D')
+title('compare mock')
+
+% action item implement
+Y_action = [5 2 7 8];
+Y_action = Y_fit(:, Y_action);
+figure();
+plot(Y_action);
+xlabel('Time')
+legend('vaccinated population', 'current_infections','new infections','cumulative deaths')
 title('compare mock')
 
