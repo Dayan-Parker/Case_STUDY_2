@@ -1,21 +1,23 @@
 function g = vaccine_sirafun(x,t,data)
 
-%becase the siroutput_full function does the same thing as this function I
-%justed called siroutput_full to make the code more readable.
-
+%call vaccine_sir to simulate a model.
 prediction = vaccine_sir(x,t);
 
 %% Orginze the data to be comparable to the prediction.
 
+% extract the data from simulated model
 predict_infections = prediction(:,6);
 predict_death = prediction(:,4);
 
+% extract the data from input
 actual_infections = data(:,1);
 actual_death = data(:,2);
 
+% set weights for evaluate error
 case_weight = 1;
 death_weight = 1;
 
+% calculate the sum of square difference as error
 case_diff = predict_infections - actual_infections;
 death_diff = predict_death - actual_death;
 
@@ -27,14 +29,8 @@ death_error = sum(death_sqr);
 
 
 %% return statment
-% return a "cost".  This is the quantitity that you want your model to
-% minimize.  Basically, this should encapsulate the difference between your
-% modeled data and the true data. Norms and distances will be useful here.
-% Hint: This is a central part of this case study!  choices here will have
-% a big impact!
 
-%%
-
+% return weighted error as cost
 g = case_error * case_weight + death_error * death_weight;
 
 end

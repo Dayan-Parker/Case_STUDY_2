@@ -1,3 +1,5 @@
+% almost the same as vaccine_sir.m, except the rate for people get vaccine
+% is forced to be 0.
 function f = vaccine_sir_first100(x,t)
 
 % set up transmission constants
@@ -8,6 +10,7 @@ k_vaccinated = 0;
 k_vaccinated_infection = x(5);
 k_recover_unwell = x(6);
 
+% calculate contants need for matrix operation
 k_still_v = 1 - k_vaccinated_infection;
 k_still_s = 1 - k_infections - k_vaccinated;
 k_still_i = 1 - k_recover - k_fatality - k_recover_unwell;
@@ -33,8 +36,7 @@ B = zeros(6,1);
 % Set up the vector of initial conditions
 x0 = [ic_susc, ic_inf, ic_rec, ic_fatality, 0, 0];
 
-% Here is a compact way to simulate a linear dynamical system.
-% Type 'help ss' and 'help lsim' to learn about how these functions work!!
+% simulate a linear dynamical system.
 sys_sir_base = ss(A,B,eye(6),zeros(6,1),1);
 y = lsim(sys_sir_base,zeros(t,1),linspace(0,t-1,t),x0);
 
