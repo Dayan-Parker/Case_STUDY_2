@@ -21,7 +21,7 @@ prediction = siroutput_full(x,t);
 population = STLmetroPop*100000;
 % normalizer = 0.001;
 
-predict_cases = prediction(:,2) + prediction(:,3);
+predict_cases = prediction(:,2) + prediction(:,3) + prediction(:,4);
 predict_death = prediction(:,4);
 
 predict_cases = population * predict_cases;

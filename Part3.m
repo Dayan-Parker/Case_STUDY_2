@@ -53,23 +53,16 @@ prediction = vaccine_sir(x,t);
 
 %% Orginze the data to be comparable to the prediction.
 
-%as of yet there are not reinfection caluclated.
-
-population = STLmetroPop*100000;
-% normalizer = 0.001;
-
-predict_cases = prediction(:,2) + prediction(:,3);
+predict_infections = prediction(:,2);
 predict_death = prediction(:,4);
 
-predict_cases = population * predict_cases;
-predict_death = population * predict_death;
-actual_cases = data(:,1);
+actual_infections = data(:,1);
 actual_death = data(:,2);
 
 case_weight = 1;
-death_weight = 6400;
+death_weight = 1;
 
-case_diff = predict_cases - actual_cases;
+case_diff = predict_cases - actual_infections;
 death_diff = predict_death - actual_death;
 
 case_sqr = case_diff.^2;
