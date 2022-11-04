@@ -30,7 +30,7 @@ actual_cases = data(:,1);
 actual_death = data(:,2);
 
 case_weight = 1;
-death_weight = 1;
+death_weight = 6400;
 
 case_diff = predict_cases - actual_cases;
 death_diff = predict_death - actual_death;
