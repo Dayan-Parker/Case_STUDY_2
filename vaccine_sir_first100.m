@@ -1,10 +1,10 @@
-function f = vaccine_sir(x,t)
+function f = vaccine_sir_first100(x,t)
 
 % set up transmission constants
 k_infections = x(1);
 k_fatality = x(2);
 k_recover = x(3);
-k_vaccinated = x(4);
+k_vaccinated = 0;
 k_vaccinated_infection = x(5);
 k_recover_unwell = x(6);
 
@@ -13,12 +13,10 @@ k_still_s = 1 - k_infections - k_vaccinated;
 k_still_i = 1 - k_recover - k_fatality - k_recover_unwell;
 
 % set up initial conditions
-ic_susc = 0.4253;
-ic_inf = 0.0061;
-ic_rec = 0.5167;
-ic_fatality = 0.0450;
-ic_vaccine = 0;
-ic_new_infection = 0.0068;
+ic_susc = 1;
+ic_inf = 0;
+ic_rec = 0;
+ic_fatality = 0;
 
 % Set up SIRDVN within-population transmission matrix
 % v-VACCINATED N-new infection
@@ -33,7 +31,7 @@ A = [k_still_s k_recover_unwell 0 0 0 0; ...
 B = zeros(6,1);
 
 % Set up the vector of initial conditions
-x0 = [ic_susc, ic_inf, ic_rec, ic_fatality, ic_vaccine, ic_new_infection];
+x0 = [ic_susc, ic_inf, ic_rec, ic_fatality, 0, 0];
 
 % Here is a compact way to simulate a linear dynamical system.
 % Type 'help ss' and 'help lsim' to learn about how these functions work!!
