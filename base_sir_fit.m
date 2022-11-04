@@ -49,3 +49,6 @@ Y_fit = 2747143 * Y_fit;
 plot(Y_fit);
 legend('S','I','R','D');
 xlabel('Time')
+
+figure(2);
+plot(coviddata);
