@@ -52,7 +52,7 @@ for i = 1:798
 end
 Y_fit = [Y_fit, Y_cumulative, coviddata];
 plot(Y_fit);
-legend('model_S','model_I','model_R','model_D','model_cumulative_cases', 'measure_cases', 'measure_deaths');
+legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
 title('optimized model')
 
@@ -108,7 +108,29 @@ end
 Y_fit_action = [Y_fit_action, Y_cumulative_action, coviddata];
 figure(2);
 plot(Y_fit_action);
-legend('model_S','model_I','model_R','model_D','model_cumulative_cases', 'measure_cases', 'measure_deaths');
+legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
 title('action item')
+
+
+% action item policy
+t_policy = 185;
+coviddata_policy = coviddata(421:605, :);
+coviddata_disired = 0.75 * coviddata_policy;
+sirafun_policy= @(x)siroutput(x,t_policy,coviddata_disired);
+[x_policy,fval] = fmincon(sirafun_policy,x0,A,b,Af,bf,lb,ub);
+disp(x_policy)
+disp(fval)
+Y_fit_policy = siroutput_full(x_policy,t_policy);
+Y_fit_policy = 2747143 * Y_fit_policy;
+Y_cumulative_policy = zeros(185,1);
+for i = 1:185
+    Y_cumulative_policy(i,1)=(Y_fit_policy(i,2)+Y_fit_policy(i,3)+Y_fit_policy(i,4));
+end
+Y_fit_policy = [Y_fit_policy, Y_cumulative_policy, coviddata_disired, coviddata_policy];
+figure(3);
+plot(Y_fit_policy);
+legend('model_S','model_I','model_R','model_D','model cumulative cases', 'disired cases', 'disired deaths', 'measure cases', 'measure deaths');
+xlabel('Time')
+title('policy')
 

@@ -54,6 +54,7 @@ Y_fit = [Y_fit, Y_cumulative, coviddata];
 plot(Y_fit);
 legend('model_S','model_I','model_R','model_D','model_cumulative_cases', 'measure_cases', 'measure_deaths');
 xlabel('Time')
+title('optimized model')
 
 
 % action items
@@ -63,46 +64,61 @@ sirafun1= @(x)siroutput(x,t1,coviddata1);
 [x1,fval] = fmincon(sirafun1,x0,A,b,Af,bf,lb,ub);
 disp(x1)
 disp(fval)
-figure(2);
 Y_fit1 = siroutput_full(x1,t1);
-plot(Y_fit1);
 
-t2 = 340;
-coviddata2 = coviddata(240:340, :);
-sirafun2= @(x)siroutput(x,t2,coviddata1);
-[x2,fval] = fmincon(sirafun2,x1,A,b,Af,bf,lb,ub);
+t2 = 100;
+coviddata2 = coviddata(241:340, :);
+sirafun2= @(x)siroutput(x,t2,coviddata2);
+[x2,fval] = fmincon(sirafun2,x0,A,b,Af,bf,lb,ub);
 disp(x2)
 disp(fval)
-figure(3);
 Y_fit2 = siroutput_full(x2,t2);
-plot(Y_fit2);
 
-t3 = 660;
-coviddata3 = coviddata(340:660, :);
-sirafun3= @(x)siroutput(x,t3,coviddata1);
+t3 = 320;
+coviddata3 = coviddata(341:660, :);
+sirafun3= @(x)siroutput(x,t3,coviddata3);
 [x3,fval] = fmincon(sirafun3,x0,A,b,Af,bf,lb,ub);
 disp(x3)
 disp(fval)
-figure(4);
 Y_fit3 = siroutput_full(x3,t3);
-plot(Y_fit3);
 
-t4 = 700;
-coviddata4 = coviddata(660:700, :);
-sirafun4= @(x)siroutput(x,t4,coviddata1);
+t4 = 40;
+coviddata4 = coviddata(661:700, :);
+sirafun4= @(x)siroutput(x,t4,coviddata4);
 [x4,fval] = fmincon(sirafun4,x0,A,b,Af,bf,lb,ub);
 disp(x4)
 disp(fval)
-figure(5);
 Y_fit4 = siroutput_full(x4,t4);
-plot(Y_fit4);
 
-t5 = 798;
-coviddata5 = coviddata(700:798, :);
-sirafun5= @(x)siroutput(x,t5,coviddata1);
+t5 = 98;
+coviddata5 = coviddata(701:798, :);
+sirafun5= @(x)siroutput(x,t5,coviddata5);
 [x5,fval] = fmincon(sirafun5,x0,A,b,Af,bf,lb,ub);
 disp(x5)
 disp(fval)
-figure(5);
-Y_fit4 = siroutput_full(x5,t5);
-plot(Y_fit4);
+Y_fit5 = siroutput_full(x5,t5);
+
+
+Y_fit_action = [Y_fit1; Y_fit2; Y_fit3; Y_fit4; Y_fit5];
+Y_fit_action = 2747143 * Y_fit_action;
+Y_cumulative_action = zeros(798,1);
+for i = 1:798
+    Y_cumulative_action(i,1)=(Y_fit_action(i,2)+Y_fit_action(i,3)+Y_fit_action(i,4));
+end
+Y_fit_action = [Y_fit_action, Y_cumulative_action, coviddata];
+figure(2);
+plot(Y_fit_action);
+legend('model_S','model_I','model_R','model_D','model_cumulative_cases', 'measure_cases', 'measure_deaths');
+xlabel('Time')
+title('action item')
+
+
+% action item policy
+t_policy = 185;
+coviddatap = coviddata(421:605, :);
+sirafunp= @(x)siroutput(x,t_pol,coviddatap);
+[x5,fval] = fmincon(sirafun5,x0,A,b,Af,bf,lb,ub);
+disp(x5)
+disp(fval)
+Y_fit5 = siroutput_full(x5,t5);
+
