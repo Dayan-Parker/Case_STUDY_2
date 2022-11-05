@@ -40,6 +40,7 @@ x0 = [0.01,0.002,0.07,2737143,1,0,0];
 % This is the key line that tries to opimize your model parameters in order to
 % fit the data
 [x,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp("optimized:")
 disp(x)
 disp(fval)
 
@@ -54,6 +55,7 @@ Y_fit = [Y_fit, Y_cumulative, coviddata];
 plot(Y_fit);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
+ylabel('Population Percentage')
 title('optimized model')
 
 
@@ -62,6 +64,7 @@ t1 = 240;
 coviddata1 = coviddata(1:240, :);
 sirafun1= @(x)siroutput(x,t1,coviddata1);
 [x1,fval] = fmincon(sirafun1,x0,A,b,Af,bf,lb,ub);
+disp("t1")
 disp(x1)
 disp(fval)
 Y_fit1 = siroutput_full(x1,t1);
@@ -70,6 +73,7 @@ t2 = 100;
 coviddata2 = coviddata(241:340, :);
 sirafun2= @(x)siroutput(x,t2,coviddata2);
 [x2,fval] = fmincon(sirafun2,x0,A,b,Af,bf,lb,ub);
+disp("t2")
 disp(x2)
 disp(fval)
 Y_fit2 = siroutput_full(x2,t2);
@@ -78,11 +82,13 @@ t3 = 320;
 coviddata3 = coviddata(341:660, :);
 sirafun3= @(x)siroutput(x,t3,coviddata3);
 [x3,fval] = fmincon(sirafun3,x0,A,b,Af,bf,lb,ub);
+disp("t3")
 disp(x3)
 disp(fval)
 Y_fit3 = siroutput_full(x3,t3);
 
 t4 = 40;
+disp("t4")
 coviddata4 = coviddata(661:700, :);
 sirafun4= @(x)siroutput(x,t4,coviddata4);
 [x4,fval] = fmincon(sirafun4,x0,A,b,Af,bf,lb,ub);
@@ -91,6 +97,7 @@ disp(fval)
 Y_fit4 = siroutput_full(x4,t4);
 
 t5 = 98;
+disp("t5")
 coviddata5 = coviddata(701:798, :);
 sirafun5= @(x)siroutput(x,t5,coviddata5);
 [x5,fval] = fmincon(sirafun5,x0,A,b,Af,bf,lb,ub);
@@ -110,7 +117,8 @@ figure(2);
 plot(Y_fit_action);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
-title('action item')
+ylabel('Population Percentage')
+title('action item, distinc waves')
 
 
 % action item policy
@@ -119,6 +127,7 @@ coviddata_policy = coviddata(421:605, :);
 coviddata_disired = 0.75 * coviddata_policy;
 sirafun_policy= @(x)siroutput(x,t_policy,coviddata_disired);
 [x_policy,fval] = fmincon(sirafun_policy,x0,A,b,Af,bf,lb,ub);
+disp("policy")
 disp(x_policy)
 disp(fval)
 Y_fit_policy = siroutput_full(x_policy,t_policy);
@@ -132,5 +141,6 @@ figure(3);
 plot(Y_fit_policy);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'disired cases', 'disired deaths', 'measure cases', 'measure deaths');
 xlabel('Time')
-title('policy')
+ylabel('Population Percentage')
+title('COVID-19 modeled with our polcy changes')
 

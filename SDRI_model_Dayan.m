@@ -20,12 +20,12 @@ end
 
 figure
 plot(Simulation');
-title("SIRD simulation over 100 days")
+title("SIRD simulation over 1000 days")
 legend("Susceptable", "Infected", "Recovered","Dead")
 xlabel("Days")
 ylabel("Percentage of the population")
 
-%% Modifiede SIRD
+%% Modifieded SIRD
 
 %create an A matrix with the parcentage of SIRD with reinfections
 A_reinfect = [0.95 0.04 0.05 0; 0.05 0.85 0 0; 0 0.1 0.95 0; 0 0.01 0 1];
@@ -41,7 +41,7 @@ end
 
 figure
 plot(ReSimulation');
-title("SIRD simulation over 100 days with reinfections")
+title("SIRD simulation over 1000 days with reinfections")
 legend("Susceptable", "Infected", "Recovered","Dead")
 xlabel("Days")
 ylabel("Percentage of the population")
