@@ -47,7 +47,7 @@ figure();
 plot(Y_fit);
 xlabel('Time')
 legend('model_S','model_I','model_R','model_D','model_V', 'model_N')
-title('vaccined model')
+title('vaccinated model')
 
 %% compare the model with the given mock data
 Y_fit= [Y_fit, mockdata];
@@ -66,5 +66,9 @@ figure();
 plot(Y_action);
 xlabel('Time')
 legend('vaccinated population', 'current_infections','new infections','cumulative deaths')
-title('compare mock')
+title('prediction')
+
+%% competition 
+vaxpop = Y_fit(:, 5);
+vaxbreak = Y_fit(:, 2);
 
