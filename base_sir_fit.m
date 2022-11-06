@@ -55,7 +55,7 @@ Y_fit = [Y_fit, Y_cumulative, coviddata];
 plot(Y_fit);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
-ylabel('Population Percentage')
+ylabel('Population')
 title('optimized model')
 
 %%
@@ -145,7 +145,7 @@ figure(2);
 plot(Y_fit_action);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'measure cases', 'measure deaths');
 xlabel('Time')
-ylabel('Population Percentage')
+ylabel('Population')
 title('action item, distinc waves')
 
 
@@ -169,6 +169,6 @@ figure(3);
 plot(Y_fit_policy);
 legend('model_S','model_I','model_R','model_D','model cumulative cases', 'disired cases', 'disired deaths', 'measure cases', 'measure deaths');
 xlabel('Time')
-ylabel('Population Percentage')
+ylabel('Population')
 title('COVID-19 modeled with our polcy changes')
 
