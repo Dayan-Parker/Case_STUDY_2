@@ -24,18 +24,18 @@ b = [];
 % Hint: For example, the sum of the initial conditions should be
 % constrained
 % If you don't want such a constraint, keep these matrices empty.
-Af = ones(1,7);
-bf = 2;
+Af = [zeros(1,3),ones(1,4)];
+bf = 1;
 
 %% set up upper and lower bound constraints
 % lb < x < ub
 % here, the inequality is imposed element-wise
 % If you don't want such a constraint, keep these matrices empty.
 ub = ones(1,7);
-lb = zeros(1,7);
+lb = [0.01,0,0,0,0,0,0];
 
 % Specify some initial parameters for the optimizer to start from
-x0 = [0.01,0.002,0.07,2737143,1,0,0]; 
+x0 = [0.01,0.002,0.07,1,0,0,0]; 
 
 % This is the key line that tries to opimize your model parameters in order to
 % fit the data
@@ -58,6 +58,7 @@ xlabel('Time')
 ylabel('Population Percentage')
 title('optimized model')
 
+%%
 
 % action items
 t1 = 240;
@@ -70,6 +71,13 @@ disp(fval)
 Y_fit1 = siroutput_full(x1,t1);
 
 t2 = 100;
+Af = [
+    0,0,0,1,0,0,0;
+    0,0,0,0,1,0,0;
+    0,0,0,0,0,1,0;
+    0,0,0,0,0,0,1;  
+];
+bf = [Y_fit1(end,1),Y_fit1(end,2),Y_fit1(end,3),Y_fit1(end,4)];
 coviddata2 = coviddata(241:340, :);
 sirafun2= @(x)siroutput(x,t2,coviddata2);
 [x2,fval] = fmincon(sirafun2,x0,A,b,Af,bf,lb,ub);
@@ -86,6 +94,13 @@ disp("t3")
 disp(x3)
 disp(fval)
 Y_fit3 = siroutput_full(x3,t3);
+Af = [
+    0,0,0,1,0,0,0;
+    0,0,0,0,1,0,0;
+    0,0,0,0,0,1,0;
+    0,0,0,0,0,0,1;  
+];
+bf = [Y_fit1(end,1),Y_fit1(end,2),Y_fit1(end,3),Y_fit1(end,4)];
 
 t4 = 40;
 disp("t4")
@@ -95,6 +110,13 @@ sirafun4= @(x)siroutput(x,t4,coviddata4);
 disp(x4)
 disp(fval)
 Y_fit4 = siroutput_full(x4,t4);
+Af = [
+    0,0,0,1,0,0,0;
+    0,0,0,0,1,0,0;
+    0,0,0,0,0,1,0;
+    0,0,0,0,0,0,1;  
+];
+bf = [Y_fit1(end,1),Y_fit1(end,2),Y_fit1(end,3),Y_fit1(end,4)];
 
 t5 = 98;
 disp("t5")
@@ -104,7 +126,13 @@ sirafun5= @(x)siroutput(x,t5,coviddata5);
 disp(x5)
 disp(fval)
 Y_fit5 = siroutput_full(x5,t5);
-
+Af = [
+    0,0,0,1,0,0,0;
+    0,0,0,0,1,0,0;
+    0,0,0,0,0,1,0;
+    0,0,0,0,0,0,1;  
+];
+bf = [Y_fit1(end,1),Y_fit1(end,2),Y_fit1(end,3),Y_fit1(end,4)];
 
 Y_fit_action = [Y_fit1; Y_fit2; Y_fit3; Y_fit4; Y_fit5];
 Y_fit_action = 2747143 * Y_fit_action;
