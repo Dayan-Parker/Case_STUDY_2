@@ -68,3 +68,7 @@ xlabel('Time')
 legend('vaccinated population', 'current_infections','new infections','cumulative deaths')
 title('prediction')
 
+%% competition 
+vaxpop = Y_fit(:, 5);
+vaxbreak = Y_fit(:, 2);
+
