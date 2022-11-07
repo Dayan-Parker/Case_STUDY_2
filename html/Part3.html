@@ -1,0 +1,228 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Part3</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-11-06"><meta name="DC.source" content="Part3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">load given mock data</a></li><li><a href="#2">set up constraints and initial</a></li><li><a href="#3">first 100 days without vaccine</a></li><li><a href="#4">The rest 265 days with vaccine released</a></li><li><a href="#5">concanate the results and plot</a></li><li><a href="#6">compare the model with the given mock data</a></li><li><a href="#7">action item implement</a></li><li><a href="#8">competition</a></li></ul></div><h2 id="1">load given mock data</h2><pre class="codeinput">close <span class="string">all</span>,clc,clear
+load <span class="string">mockdata.mat</span>
+mockdata = [newInfections.',cumulativeDeaths.'];
+t = length(newInfections);
+</pre><h2 id="2">set up constraints and initial</h2><pre class="codeinput"><span class="comment">%set up rate and initial condition constraints</span>
+<span class="comment">% Set A and b to impose a parameter inequality constraint of the form A*x &lt; b</span>
+A = [];
+b = [];
+
+<span class="comment">%set up some fixed constraints</span>
+<span class="comment">% Set Af and bf to impose a parameter constraint of the form Af*x = bf</span>
+Af = ones(1,6);
+bf = 2;
+
+<span class="comment">%set up upper and lower bound constraints</span>
+<span class="comment">% lb &lt; x &lt; ub</span>
+ub = ones(1,6);
+lb = zeros(1,6);
+
+<span class="comment">% Specify some initial parameters for the optimizer to start from</span>
+x0 = [0.01,0.002,0.07,0.001,0.005,0.04];
+</pre><h2 id="3">first 100 days without vaccine</h2><pre class="codeinput">t1 = 100;
+mockdata100 = mockdata(1:100, :);
+sirafun= @(x)vaccine_sirafun_first100(x,t1,mockdata100);
+[x100,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp(x100)
+disp(fval)
+Y_fit_100 = vaccine_sir_first100(x100,t1);
+</pre><pre class="codeoutput">
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the value of the step size tolerance and constraints are 
+satisfied to within the value of the constraint tolerance.
+
+    0.0160    0.0486    0.5604    0.4313    0.4321    0.5115
+
+    0.0024
+
+</pre><h2 id="4">The rest 265 days with vaccine released</h2><pre class="codeinput">t2 = 265;
+mockdatarest = mockdata(101:365, :);
+sirafun= @(x)vaccine_sirafun(x,t2,mockdatarest);
+[x,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp(x)
+disp(fval)
+Y_fit = vaccine_sir(x,t2);
+</pre><pre class="codeoutput">
+Local minimum found that satisfies the constraints.
+
+Optimization completed because the objective function is non-decreasing in 
+feasible directions, to within the value of the optimality tolerance,
+and constraints are satisfied to within the value of the constraint tolerance.
+
+    0.0364    0.0367    0.9820    0.9092    0.0355    0.0002
+
+   7.3329e-04
+
+</pre><h2 id="5">concanate the results and plot</h2><pre class="codeinput">Y_fit = [Y_fit_100; Y_fit];
+figure();
+plot(Y_fit);
+xlabel(<span class="string">'Time'</span>)
+legend(<span class="string">'model_S'</span>,<span class="string">'model_I'</span>,<span class="string">'model_R'</span>,<span class="string">'model_D'</span>,<span class="string">'model_V'</span>, <span class="string">'model_N'</span>)
+title(<span class="string">'vaccinated model'</span>)
+</pre><img vspace="5" hspace="5" src="Part3_01.png" alt=""> <h2 id="6">compare the model with the given mock data</h2><pre class="codeinput">Y_fit= [Y_fit, mockdata];
+Y_compare = [6 4 7 8];
+Y_compare = Y_fit(:, Y_compare);
+figure();
+plot(Y_compare);
+xlabel(<span class="string">'Time'</span>)
+legend(<span class="string">'model_N'</span>, <span class="string">'model_D'</span>,<span class="string">'mock N'</span>,<span class="string">'mock D'</span>)
+title(<span class="string">'compare mock'</span>)
+</pre><img vspace="5" hspace="5" src="Part3_02.png" alt=""> <h2 id="7">action item implement</h2><pre class="codeinput">Y_action = [5 2 7 8];
+Y_action = Y_fit(:, Y_action);
+figure();
+plot(Y_action);
+xlabel(<span class="string">'Time'</span>)
+legend(<span class="string">'vaccinated population'</span>, <span class="string">'current_infections'</span>,<span class="string">'new infections'</span>,<span class="string">'cumulative deaths'</span>)
+title(<span class="string">'prediction'</span>)
+</pre><img vspace="5" hspace="5" src="Part3_03.png" alt=""> <h2 id="8">competition</h2><pre class="codeinput">vaxpop = Y_fit(:, 5);
+vaxbreak = Y_fit(:, 2);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% load given mock data
+close all,clc,clear
+load mockdata.mat
+mockdata = [newInfections.',cumulativeDeaths.']; 
+t = length(newInfections); 
+
+%% set up constraints and initial
+%set up rate and initial condition constraints
+% Set A and b to impose a parameter inequality constraint of the form A*x < b
+A = [];
+b = [];
+
+%set up some fixed constraints
+% Set Af and bf to impose a parameter constraint of the form Af*x = bf
+Af = ones(1,6);
+bf = 2;
+
+%set up upper and lower bound constraints
+% lb < x < ub
+ub = ones(1,6);
+lb = zeros(1,6);
+
+% Specify some initial parameters for the optimizer to start from
+x0 = [0.01,0.002,0.07,0.001,0.005,0.04]; 
+
+%% first 100 days without vaccine
+t1 = 100;
+mockdata100 = mockdata(1:100, :);
+sirafun= @(x)vaccine_sirafun_first100(x,t1,mockdata100);
+[x100,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp(x100)
+disp(fval)
+Y_fit_100 = vaccine_sir_first100(x100,t1);
+
+%% The rest 265 days with vaccine released
+t2 = 265;
+mockdatarest = mockdata(101:365, :);
+sirafun= @(x)vaccine_sirafun(x,t2,mockdatarest);
+[x,fval] = fmincon(sirafun,x0,A,b,Af,bf,lb,ub);
+disp(x)
+disp(fval)
+Y_fit = vaccine_sir(x,t2);
+
+%% concanate the results and plot
+Y_fit = [Y_fit_100; Y_fit];
+figure();
+plot(Y_fit);
+xlabel('Time')
+legend('model_S','model_I','model_R','model_D','model_V', 'model_N')
+title('vaccinated model')
+
+%% compare the model with the given mock data
+Y_fit= [Y_fit, mockdata];
+Y_compare = [6 4 7 8];
+Y_compare = Y_fit(:, Y_compare);
+figure();
+plot(Y_compare);
+xlabel('Time')
+legend('model_N', 'model_D','mock N','mock D')
+title('compare mock')
+
+%% action item implement
+Y_action = [5 2 7 8];
+Y_action = Y_fit(:, Y_action);
+figure();
+plot(Y_action);
+xlabel('Time')
+legend('vaccinated population', 'current_infections','new infections','cumulative deaths')
+title('prediction')
+
+%% competition 
+vaxpop = Y_fit(:, 5);
+vaxbreak = Y_fit(:, 2);
+
+
+##### SOURCE END #####
+--></body></html>
